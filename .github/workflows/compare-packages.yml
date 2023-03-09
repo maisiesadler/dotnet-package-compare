@@ -30,6 +30,7 @@ jobs:
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
+        if: ${{ env.action_state }}
         with:
           message: |
             Hello world ! :wave:
