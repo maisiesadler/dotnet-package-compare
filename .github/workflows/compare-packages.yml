@@ -23,15 +23,16 @@ jobs:
           dotnet list package --include-transitive > packages-after.txt
 
           diff packages-before.txt packages-after.txt || true
-          echo ok
-          diff=$(diff packages-before.txt packages-after.txt || true)
-          echo $diff
-          echo "{diff}={$diff}" >> $GITHUB_ENV
+
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "DIFF<<$EOF" >> $GITHUB_ENV
+          diff packages-before.txt packages-after.txt || true >> $GITHUB_ENV
+          echo "$EOF" >> $GITHUB_ENV
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
-        if: ${{ env.action_state }}
+        if: ${{ env.DIFF }}
         with:
           message: |
             Hello world ! :wave:
-            "${{ env.diff }}"
+            "${{ env.DIFF }}"
