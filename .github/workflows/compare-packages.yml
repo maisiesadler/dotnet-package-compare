@@ -3,13 +3,33 @@ on:
   pull_request
 
 jobs:
-  chores_api:
-    name: Run Chores API Tests
+  compare_packages:
+    name: Compare packages to main
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Run tests
+        with:
+          path: repo
+      - name: Run Comparison
         shell: bash
         run: |
-          git branch
-          git checkout main
+          ls
+          git init
+          cd repo
+          dotnet list package --include-transitive > ../packages
+
+          cd ../
+          git add .
+          git commit -m "initial"
+
+          cd repo
+          git checkout -
+          dotnet list package --include-transitive > ../packages
+          cd ../
+          git diff
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            Hello world ! :wave:
