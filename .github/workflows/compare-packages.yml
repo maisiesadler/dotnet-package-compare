@@ -1,0 +1,15 @@
+name: Compare packages
+on:
+  pull_request
+
+jobs:
+  chores_api:
+    name: Run Chores API Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Run tests
+        shell: bash
+        run: |
+          git branch
+          git checkout main
