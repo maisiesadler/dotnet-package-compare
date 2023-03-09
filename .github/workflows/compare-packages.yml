@@ -11,13 +11,20 @@ jobs:
       - name: Run Comparison
         shell: bash
         run: |
+          git checkout main
+          dotnet build
           dotnet list package --include-transitive > packages-before.txt
 
           cd repo
           git checkout -
+          dotnet build
           dotnet list package --include-transitive > packages-after.txt
 
           diff packages-before.txt packages-after.txt
+          echo ok
+          diff=$(diff packages-before.txt packages-after.txt)
+          echo $diff
+          echo "::set-output name=diff::$diff"
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
