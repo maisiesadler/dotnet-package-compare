@@ -6,6 +6,8 @@ jobs:
   compare_packages:
     name: Compare packages to main
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v1
       - name: Run Comparison
@@ -24,11 +26,11 @@ jobs:
           echo ok
           diff=$(diff packages-before.txt packages-after.txt)
           echo $diff
-          echo "::set-output name=diff::$diff"
+          echo "{diff}={$diff}" >> $GITHUB_ENV
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
             Hello world ! :wave:
-            ${{ steps.run_comparison.outputs.diff }}
+            "${{ env.action_state }}"
