@@ -22,12 +22,16 @@ jobs:
           dotnet build
           dotnet list package --include-transitive > packages-after.txt
 
+          DIFF_OUTPUT=$(diff packages-before.txt packages-after.txt || true)
+
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "DIFF<<$EOF" >> $GITHUB_ENV
-          diff packages-before.txt packages-after.txt || true >> $GITHUB_ENV
+          echo $DIFF_OUTPUT >> $GITHUB_ENV
           echo "$EOF" >> $GITHUB_ENV
 
+          echo here are the variables
           echo $GITHUB_ENV
+          echo $DIFF_OUTPUT >> $GITHUB_STEP_SUMMARY
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
