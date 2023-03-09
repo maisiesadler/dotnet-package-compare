@@ -23,12 +23,13 @@ jobs:
           dotnet list package --include-transitive > packages-after.txt
 
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-          echo "JSON_RESPONSE<<$EOF" >> $GITHUB_ENV
+          echo "DIFF_OUTPUT<<$EOF" >> $GITHUB_ENV
           diff packages-before.txt packages-after.txt || true >> $GITHUB_ENV
           echo "$EOF" >> $GITHUB_ENV
 
           echo here are the variables
           echo $GITHUB_ENV
+          echo ${{ env.DIFF_OUTPUT }}
           echo $DIFF_OUTPUT >> $GITHUB_STEP_SUMMARY
 
       - name: Comment PR
