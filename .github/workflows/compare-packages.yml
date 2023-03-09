@@ -25,7 +25,7 @@ jobs:
           diff packages-before.txt packages-after.txt
 
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-          echo "JSON_RESPONSE<<$EOF" >> $GITHUB_ENV
+          echo "DIFF<<$EOF" >> $GITHUB_ENV
           curl diff packages-before.txt packages-after.txt >> $GITHUB_ENV
           echo "$EOF" >> $GITHUB_ENV
 
@@ -35,4 +35,4 @@ jobs:
         with:
           message: |
             Hello world ! :wave:
-            "${{ env.EOF }}"
+            "${{ env.DIFF }}"
