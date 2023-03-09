@@ -9,13 +9,13 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Run Comparison
+        id: run_comparison
         shell: bash
         run: |
           git checkout main
           dotnet build
           dotnet list package --include-transitive > packages-before.txt
 
-          cd repo
           git checkout -
           dotnet build
           dotnet list package --include-transitive > packages-after.txt
@@ -31,3 +31,4 @@ jobs:
         with:
           message: |
             Hello world ! :wave:
+            ${{ steps.run_comparison.outputs.diff }}
