@@ -8,25 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-        with:
-          path: repo
       - name: Run Comparison
         shell: bash
         run: |
-          ls
-          git init
-          cd repo
-          dotnet list package --include-transitive > ../packages
-
-          cd ../
-          git add .
-          git commit -m "initial"
+          dotnet list package --include-transitive > packages-before.txt
 
           cd repo
           git checkout -
-          dotnet list package --include-transitive > ../packages
-          cd ../
-          git diff
+          dotnet list package --include-transitive > packages-after.txt
+
+          diff packages-before.txt packages-after.txt
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
