@@ -39,4 +39,4 @@ jobs:
         with:
           message: |
             Hello world ! :wave:
-            "${{ env.DIFF }}"
+            "${{ env.DIFF_OUTPUT }}"
