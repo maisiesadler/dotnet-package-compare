@@ -16,18 +16,15 @@ jobs:
         run: |
           git checkout main
           dotnet build
-          dotnet list package --include-transitive > packages.txt
+          dotnet list package --include-transitive > packages-before.txt
 
           git checkout -
-          git add .
-          git commit -m "before"
-
           dotnet build
-          dotnet list package --include-transitive > packages.txt
+          dotnet list package --include-transitive > packages-after.txt
 
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "DIFF_OUTPUT<<$EOF" >> $GITHUB_ENV
-          git diff >> $GITHUB_ENV
+          diff packages-before.txt packages-after.txt || true >> $GITHUB_ENV
           echo "$EOF" >> $GITHUB_ENV
 
       - name: Comment PR
