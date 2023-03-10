@@ -8,7 +8,8 @@ public record Package(string Name, string Version, bool DirectReference);
 
 public record Project(string Name, IList<ProjectFramework> Frameworks);
 public record ProjectFramework(string Name, PackageChanges PackageChanges);
-public record PackageChanges(IList<Package> Added, IList<Package> Removed);
+public record PackageChanges(IList<Package> Added, IList<Package> Removed, IList<PackageChange> Changed);
+public record PackageChange(string Name, string VersionBefore, bool DirectReferenceBefore, string VersionAfter, bool DirectReferenceAfter);
 
 public class PackageComparison
 {
@@ -24,14 +25,20 @@ public class PackageComparison
         {
             if (!projects.ContainsKey(projectAndFramework))
             {
-                projects[projectAndFramework] = new PackageChanges(new List<Package>(), new List<Package>());
+                projects[projectAndFramework] = new PackageChanges(new List<Package>(), new List<Package>(), new List<PackageChange>());
             }
 
             foreach (var (packageName, package) in frameworkPackages)
             {
                 if (!projectsByFrameworkByPackageBefore.TryGetValue(projectAndFramework, out var projectAndFrameworkBefore)
-                    || !projectAndFrameworkBefore.ContainsKey(packageName))
+                    || !projectAndFrameworkBefore.TryGetValue(packageName, out var packageBefore))
+                {
                     projects[projectAndFramework].Added.Add(package);
+                }
+                else if (packageBefore.Version != package.Version)
+                {
+                    projects[projectAndFramework].Changed.Add(new PackageChange(packageName, packageBefore.Version, packageBefore.DirectReference, package.Version, package.DirectReference));
+                }
             }
         }
 
@@ -39,14 +46,16 @@ public class PackageComparison
         {
             if (!projects.ContainsKey(projectAndFramework))
             {
-                projects[projectAndFramework] = new PackageChanges(new List<Package>(), new List<Package>());
+                projects[projectAndFramework] = new PackageChanges(new List<Package>(), new List<Package>(), new List<PackageChange>());
             }
 
             foreach (var (packageName, package) in frameworkPackages)
             {
                 if (!projectsByFrameworkByPackageAfter.TryGetValue(projectAndFramework, out var projectAndFrameworkAfter)
                     || !projectAndFrameworkAfter.ContainsKey(packageName))
+                {
                     projects[projectAndFramework].Removed.Add(package);
+                }
             }
         }
 
