@@ -26,11 +26,8 @@ jobs:
 
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "DIFF_OUTPUT<<$EOF" >> $GITHUB_ENV
-          echo "$TEST" >> $GITHUB_ENV
+          diff packages-before.txt packages-after.txt || true >> $GITHUB_ENV
           echo "$EOF" >> $GITHUB_ENV
-
-          echo test is tet
-          echo $TEST
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
