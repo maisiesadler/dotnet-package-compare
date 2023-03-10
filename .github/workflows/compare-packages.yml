@@ -29,8 +29,10 @@ jobs:
 
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "DIFF_OUTPUT<<$EOF" >> $GITHUB_ENV
-          diff packages-before.txt packages-after.txt || true >> $GITHUB_ENV
+          echo diff packages-before.txt packages-after.txt || true >> $GITHUB_ENV
           echo "$EOF" >> $GITHUB_ENV
+
+          echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
@@ -39,3 +41,4 @@ jobs:
           message: |
             Hello world ! :wave:
             ${{ env.JSON_RESPONSE }}
+            ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}
