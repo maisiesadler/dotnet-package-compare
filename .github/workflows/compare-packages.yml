@@ -22,17 +22,17 @@ jobs:
           dotnet build
           dotnet list package --include-transitive > packages-after.txt
 
-          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
-          echo "DIFF_OUTPUT<<$EOF" >> $GITHUB_ENV
-          echo diff packages-before.txt packages-after.txt || true >> $GITHUB_ENV
-          echo "$EOF" >> $GITHUB_ENV
+          echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
 
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "JSON_RESPONSE<<$EOF" >> $GITHUB_ENV
-          curl https://example.com >> $GITHUB_ENV
+          diff packages-before.txt packages-after.txt >> $GITHUB_ENV
           echo "$EOF" >> $GITHUB_ENV
 
-          echo "SELECTED_COLOR=green" >> $GITHUB_OUTPUT
+          # EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          # echo "DIFF_OUTPUT<<$EOF" >> $GITHUB_ENV
+          # diff packages-before.txt packages-after.txt || true >> $GITHUB_ENV
+          # echo "$EOF" >> $GITHUB_ENV
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
