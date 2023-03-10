@@ -24,8 +24,7 @@ jobs:
 
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "DIFF_OUTPUT<<$EOF" >> $GITHUB_ENV
-          echo tseting 123 >> $GITHUB_ENV
-          echodiff packages-before.txt packages-after.txt >> $GITHUB_ENV
+          diff packages-before.txt packages-after.txt || true >> $GITHUB_ENV
           echo "$EOF" >> $GITHUB_ENV
 
           echo here are the variables
@@ -35,7 +34,7 @@ jobs:
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
-        # if: ${{ env.DIFF_OUTPUT }}
+        if: ${{ env.DIFF_OUTPUT }}
         with:
           message: |
             Hello world ! :wave:
