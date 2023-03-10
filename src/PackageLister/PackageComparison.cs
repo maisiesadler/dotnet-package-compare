@@ -35,7 +35,7 @@ public class PackageComparison
                 {
                     projects[projectAndFramework].Added.Add(package);
                 }
-                else if (packageBefore.Version != package.Version)
+                else if (packageBefore.Version != package.Version || packageBefore.DirectReference != package.DirectReference)
                 {
                     projects[projectAndFramework].Changed.Add(new PackageChange(packageName, packageBefore.Version, packageBefore.DirectReference, package.Version, package.DirectReference));
                 }
