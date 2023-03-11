@@ -1,5 +1,3 @@
-using System.Collections.Immutable;
-
 namespace PackageLister.Test;
 
 public class PackageComparisonTests
@@ -8,11 +6,11 @@ public class PackageComparisonTests
     public void UnchangedPackage_NotReturned()
     {
         // Arrange
-        var projectsBefore = new ProjectPackagesOutput(
+        var projectsBefore = new SolutionListPackagesOutput(
             ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
         );
 
-        var projectsAfter = new ProjectPackagesOutput(
+        var projectsAfter = new SolutionListPackagesOutput(
             ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
         );
 
@@ -30,11 +28,11 @@ public class PackageComparisonTests
     public void AddedPackage_ReturnedAsAdded()
     {
         // Arrange
-        var projectsBefore = new ProjectPackagesOutput(
+        var projectsBefore = new SolutionListPackagesOutput(
             ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
         );
 
-        var projectsAfter = new ProjectPackagesOutput(
+        var projectsAfter = new SolutionListPackagesOutput(
             ("Project1", "net7.0", new Package("Package.One", "1.2.3", true)),
             ("Project1", "net7.0", new Package("Package.Two", "1.2.3", true))
         );
@@ -58,12 +56,12 @@ public class PackageComparisonTests
     public void RemovedPackage_ReturnedAsRemoved()
     {
         // Arrange
-        var projectsBefore = new ProjectPackagesOutput(
+        var projectsBefore = new SolutionListPackagesOutput(
             ("Project1", "net7.0", new Package("Package.One", "1.2.3", true)),
             ("Project1", "net7.0", new Package("Package.Two", "1.2.3", true))
         );
 
-        var projectsAfter = new ProjectPackagesOutput(
+        var projectsAfter = new SolutionListPackagesOutput(
             ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
         );
 
@@ -86,11 +84,11 @@ public class PackageComparisonTests
     public void VersionChange_ShownAsChange()
     {
         // Arrange
-        var projectsBefore = new ProjectPackagesOutput(
+        var projectsBefore = new SolutionListPackagesOutput(
             ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
         );
 
-        var projectsAfter = new ProjectPackagesOutput(
+        var projectsAfter = new SolutionListPackagesOutput(
             ("Project1", "net7.0", new Package("Package.One", "2.0.0", true))
         );
 
@@ -115,11 +113,11 @@ public class PackageComparisonTests
     public void DirectReferenceChange_ShownAsChange()
     {
         // Arrange
-        var projectsBefore = new ProjectPackagesOutput(
+        var projectsBefore = new SolutionListPackagesOutput(
             ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
         );
 
-        var projectsAfter = new ProjectPackagesOutput(
+        var projectsAfter = new SolutionListPackagesOutput(
             ("Project1", "net7.0", new Package("Package.One", "1.2.3", false))
         );
 
