@@ -1,16 +1,16 @@
-name: Run tests
+name: Run format
 
 on:
   push
 
 jobs:
-  run-tests:
-    name: Run Tests
+  run-format:
+    name: Run Format
     runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-dotnet@v1
 
-    - name: Test
-      run: dotnet test
+    - name: Format
+      run: dotnet format --verify-no-changes
