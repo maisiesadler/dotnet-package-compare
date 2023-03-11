@@ -37,7 +37,7 @@ public class SolutionListPackagesOutput
         return false;
     }
 
-    public IEnumerable<(ProjectAndFramework projectAndFramework, List<Package> package)> GetPackagesByProjectAndFramework()
+    public IEnumerable<(ProjectAndFramework projectAndFramework, List<Package> packages)> GetPackagesByProjectAndFramework()
     {
         foreach (var (projectAndFramework, packageKv) in _packagesByProjectAndFramwork)
         {
