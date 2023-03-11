@@ -4,11 +4,11 @@ namespace PackageLister;
 
 public record ProjectAndFramework(string ProjectName, string FrameworkName);
 
-public class ProjectPackagesOutput
+public class SolutionListPackagesOutput
 {
     private readonly Dictionary<ProjectAndFramework, Dictionary<string, Package>> _packagesByProjectAndFramwork = new();
 
-    public ProjectPackagesOutput(params (string projectName, string frameworkName, Package package)[] initial)
+    public SolutionListPackagesOutput(params (string projectName, string frameworkName, Package package)[] initial)
     {
         foreach (var project in initial)
         {
