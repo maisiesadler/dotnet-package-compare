@@ -1,0 +1,16 @@
+name: PR - Run tests
+
+on:
+  push
+
+jobs:
+  run-tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-dotnet@v1
+
+    - name: Test
+      run: dotnet test
