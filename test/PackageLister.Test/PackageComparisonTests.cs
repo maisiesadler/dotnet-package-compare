@@ -8,27 +8,13 @@ public class PackageComparisonTests
     public void UnchangedPackage_NotReturned()
     {
         // Arrange
-        var projectsBefore = new List<ProjectPackages>
-        {
-            new ProjectPackages("Project1", new List<FrameworkPackages>
-            {
-                new FrameworkPackages("net7.0", new List<Package>
-                {
-                    new Package("Package.One", "1.2.3", true),
-                }.ToImmutableList<Package>()),
-            }.ToImmutableList<FrameworkPackages>())
-        };
+        var projectsBefore = new ProjectPackagesOutput(
+            ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
+        );
 
-        var projectsAfter = new List<ProjectPackages>
-        {
-            new ProjectPackages("Project1", new List<FrameworkPackages>
-            {
-                new FrameworkPackages("net7.0", new List<Package>
-                {
-                    new Package("Package.One", "1.2.3", true),
-                }.ToImmutableList<Package>()),
-            }.ToImmutableList<FrameworkPackages>())
-        };
+        var projectsAfter = new ProjectPackagesOutput(
+            ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
+        );
 
         // Act
         var changes = new PackageComparison().Compare(projectsBefore, projectsAfter);
@@ -44,28 +30,14 @@ public class PackageComparisonTests
     public void AddedPackage_ReturnedAsAdded()
     {
         // Arrange
-        var projectsBefore = new List<ProjectPackages>
-        {
-            new ProjectPackages("Project1", new List<FrameworkPackages>
-            {
-                new FrameworkPackages("net7.0", new List<Package>
-                {
-                    new Package("Package.One", "1.2.3", true),
-                }.ToImmutableList<Package>()),
-            }.ToImmutableList<FrameworkPackages>())
-        };
+        var projectsBefore = new ProjectPackagesOutput(
+            ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
+        );
 
-        var projectsAfter = new List<ProjectPackages>
-        {
-            new ProjectPackages("Project1", new List<FrameworkPackages>
-            {
-                new FrameworkPackages("net7.0", new List<Package>
-                {
-                    new Package("Package.One", "1.2.3", true),
-                    new Package("Package.Two", "1.2.3", true),
-                }.ToImmutableList<Package>()),
-            }.ToImmutableList<FrameworkPackages>())
-        };
+        var projectsAfter = new ProjectPackagesOutput(
+            ("Project1", "net7.0", new Package("Package.One", "1.2.3", true)),
+            ("Project1", "net7.0", new Package("Package.Two", "1.2.3", true))
+        );
 
         // Act
         var changes = new PackageComparison().Compare(projectsBefore, projectsAfter);
@@ -86,28 +58,14 @@ public class PackageComparisonTests
     public void RemovedPackage_ReturnedAsRemoved()
     {
         // Arrange
-        var projectsBefore = new List<ProjectPackages>
-        {
-            new ProjectPackages("Project1", new List<FrameworkPackages>
-            {
-                new FrameworkPackages("net7.0", new List<Package>
-                {
-                    new Package("Package.One", "1.2.3", true),
-                    new Package("Package.Two", "1.2.3", true),
-                }.ToImmutableList<Package>()),
-            }.ToImmutableList<FrameworkPackages>())
-        };
+        var projectsBefore = new ProjectPackagesOutput(
+            ("Project1", "net7.0", new Package("Package.One", "1.2.3", true)),
+            ("Project1", "net7.0", new Package("Package.Two", "1.2.3", true))
+        );
 
-        var projectsAfter = new List<ProjectPackages>
-        {
-            new ProjectPackages("Project1", new List<FrameworkPackages>
-            {
-                new FrameworkPackages("net7.0", new List<Package>
-                {
-                    new Package("Package.One", "1.2.3", true),
-                }.ToImmutableList<Package>()),
-            }.ToImmutableList<FrameworkPackages>())
-        };
+        var projectsAfter = new ProjectPackagesOutput(
+            ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
+        );
 
         // Act
         var changes = new PackageComparison().Compare(projectsBefore, projectsAfter);
@@ -128,27 +86,13 @@ public class PackageComparisonTests
     public void VersionChange_ShownAsChange()
     {
         // Arrange
-        var projectsBefore = new List<ProjectPackages>
-        {
-            new ProjectPackages("Project1", new List<FrameworkPackages>
-            {
-                new FrameworkPackages("net7.0", new List<Package>
-                {
-                    new Package("Package.One", "1.2.3", true),
-                }.ToImmutableList<Package>()),
-            }.ToImmutableList<FrameworkPackages>())
-        };
+        var projectsBefore = new ProjectPackagesOutput(
+            ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
+        );
 
-        var projectsAfter = new List<ProjectPackages>
-        {
-            new ProjectPackages("Project1", new List<FrameworkPackages>
-            {
-                new FrameworkPackages("net7.0", new List<Package>
-                {
-                    new Package("Package.One", "2.0.0", true),
-                }.ToImmutableList<Package>()),
-            }.ToImmutableList<FrameworkPackages>())
-        };
+        var projectsAfter = new ProjectPackagesOutput(
+            ("Project1", "net7.0", new Package("Package.One", "2.0.0", true))
+        );
 
         // Act
         var changes = new PackageComparison().Compare(projectsBefore, projectsAfter);
@@ -171,27 +115,13 @@ public class PackageComparisonTests
     public void DirectReferenceChange_ShownAsChange()
     {
         // Arrange
-        var projectsBefore = new List<ProjectPackages>
-        {
-            new ProjectPackages("Project1", new List<FrameworkPackages>
-            {
-                new FrameworkPackages("net7.0", new List<Package>
-                {
-                    new Package("Package.One", "1.2.3", true),
-                }.ToImmutableList<Package>()),
-            }.ToImmutableList<FrameworkPackages>())
-        };
+        var projectsBefore = new ProjectPackagesOutput(
+            ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
+        );
 
-        var projectsAfter = new List<ProjectPackages>
-        {
-            new ProjectPackages("Project1", new List<FrameworkPackages>
-            {
-                new FrameworkPackages("net7.0", new List<Package>
-                {
-                    new Package("Package.One", "1.2.3", false),
-                }.ToImmutableList<Package>()),
-            }.ToImmutableList<FrameworkPackages>())
-        };
+        var projectsAfter = new ProjectPackagesOutput(
+            ("Project1", "net7.0", new Package("Package.One", "1.2.3", false))
+        );
 
         // Act
         var changes = new PackageComparison().Compare(projectsBefore, projectsAfter);

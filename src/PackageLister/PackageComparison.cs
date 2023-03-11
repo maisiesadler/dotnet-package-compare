@@ -1,9 +1,51 @@
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PackageLister;
 
-public record ProjectPackages(string Name, IImmutableList<FrameworkPackages> Frameworks);
-public record FrameworkPackages(string Name, IImmutableList<Package> Packages);
+public class ProjectPackagesOutput
+{
+    private readonly Dictionary<ProjectAndFramework, Dictionary<string, Package>> _packagesByProjectAndFramwork = new();
+
+    public ProjectPackagesOutput(params (string projectName, string frameworkName, Package package)[] initial)
+    {
+        foreach (var project in initial)
+        {
+            Add(project.projectName, project.frameworkName, project.package);
+        }
+    }
+
+    public void Add(string projectName, string frameworkName, Package package)
+    {
+        var projectAndFramework = new ProjectAndFramework(projectName, frameworkName);
+        if (!_packagesByProjectAndFramwork.ContainsKey(projectAndFramework))
+            _packagesByProjectAndFramwork.Add(projectAndFramework, new Dictionary<string, Package>());
+
+        _packagesByProjectAndFramwork[projectAndFramework].Add(package.Name, package);
+    }
+
+    public bool TryGetPackage(ProjectAndFramework projectAndFramework, string packageName, [NotNullWhen(true)] out Package? package)
+    {
+        if (_packagesByProjectAndFramwork.TryGetValue(projectAndFramework, out var packages)
+            && packages.TryGetValue(packageName, out package))
+        {
+            return true;
+        }
+
+        package = null;
+        return false;
+    }
+
+    public IEnumerable<(ProjectAndFramework projectAndFramework, List<Package> package)> GetPackagesByProjectAndFramework()
+    {
+        foreach (var (projectAndFramework, packageKv) in _packagesByProjectAndFramwork)
+        {
+            yield return (projectAndFramework, packageKv.Values.ToList());
+        }
+    }
+}
+public record ProjectAndFramework(string ProjectName, string FrameworkName);
+
 public record Package(string Name, string Version, bool DirectReference);
 
 public record Project(string Name, IList<ProjectFramework> Frameworks);
@@ -13,46 +55,36 @@ public record PackageChange(string Name, string VersionBefore, bool DirectRefere
 
 public class PackageComparison
 {
-    public IEnumerable<Project> Compare(List<ProjectPackages> before, List<ProjectPackages> after)
+    public IEnumerable<Project> Compare(ProjectPackagesOutput before, ProjectPackagesOutput after)
     {
         var allProjectsAndFrameworks = new HashSet<string>();
-        var projectsByFrameworkByPackageBefore = GetPackagesByNameByProjectByFramework(before);
-        var projectsByFrameworkByPackageAfter = GetPackagesByNameByProjectByFramework(after);
+        var projects = new Dictionary<ProjectAndFramework, PackageChanges>();
 
-        var projects = new Dictionary<InProgressProjectAndFramework, PackageChanges>();
-
-        foreach (var (projectAndFramework, frameworkPackages) in projectsByFrameworkByPackageAfter)
+        foreach (var (projectAndFramework, frameworkPackages) in after.GetPackagesByProjectAndFramework())
         {
             if (!projects.ContainsKey(projectAndFramework))
             {
                 projects[projectAndFramework] = new PackageChanges(new List<Package>(), new List<Package>(), new List<PackageChange>());
             }
 
-            foreach (var (packageName, package) in frameworkPackages)
+            foreach (var package in frameworkPackages!)
             {
-                if (!projectsByFrameworkByPackageBefore.TryGetValue(projectAndFramework, out var projectAndFrameworkBefore)
-                    || !projectAndFrameworkBefore.TryGetValue(packageName, out var packageBefore))
+                if (!before.TryGetPackage(projectAndFramework, package.Name, out var packageBefore))
                 {
                     projects[projectAndFramework].Added.Add(package);
                 }
                 else if (packageBefore.Version != package.Version || packageBefore.DirectReference != package.DirectReference)
                 {
-                    projects[projectAndFramework].Changed.Add(new PackageChange(packageName, packageBefore.Version, packageBefore.DirectReference, package.Version, package.DirectReference));
+                    projects[projectAndFramework].Changed.Add(new PackageChange(package.Name, packageBefore.Version, packageBefore.DirectReference, package.Version, package.DirectReference));
                 }
             }
         }
 
-        foreach (var (projectAndFramework, frameworkPackages) in projectsByFrameworkByPackageBefore)
+        foreach (var (projectAndFramework, frameworkPackages) in before.GetPackagesByProjectAndFramework())
         {
-            if (!projects.ContainsKey(projectAndFramework))
+            foreach (var package in frameworkPackages!)
             {
-                projects[projectAndFramework] = new PackageChanges(new List<Package>(), new List<Package>(), new List<PackageChange>());
-            }
-
-            foreach (var (packageName, package) in frameworkPackages)
-            {
-                if (!projectsByFrameworkByPackageAfter.TryGetValue(projectAndFramework, out var projectAndFrameworkAfter)
-                    || !projectAndFrameworkAfter.ContainsKey(packageName))
+                if (!after.TryGetPackage(projectAndFramework, package.Name, out var packageBefore))
                 {
                     projects[projectAndFramework].Removed.Add(package);
                 }
@@ -71,26 +103,5 @@ public class PackageComparison
 
         return uniqueProjects
             .Select(projectAndFramwork => new Project(projectAndFramwork.Key, projectAndFramwork.Value.Select(f => new ProjectFramework(f.framework, f.changes)).ToList()));
-    }
-
-    private record InProgressProjectAndFramework(string ProjectName, string FrameworkName);
-    private Dictionary<InProgressProjectAndFramework, Dictionary<string, Package>> GetPackagesByNameByProjectByFramework(List<ProjectPackages> projectPackages)
-    {
-        var projects = new Dictionary<InProgressProjectAndFramework, Dictionary<string, Package>>();
-        foreach (var project in projectPackages)
-        {
-            foreach (var framework in project.Frameworks)
-            {
-                var projectAndFramework = new InProgressProjectAndFramework(project.Name, framework.Name);
-                projects.Add(projectAndFramework, new Dictionary<string, Package>());
-
-                foreach (var package in framework.Packages)
-                {
-                    projects[projectAndFramework].Add(package.Name, package);
-                }
-            }
-        }
-
-        return projects;
     }
 }
