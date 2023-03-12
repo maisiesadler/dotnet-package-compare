@@ -15,44 +15,59 @@ var interactor = sp.GetRequiredService<CompareSolutionsInteractor>();
 
 var projects = await interactor.Execute();
 
+var anyChanges = projects
+                    .SelectMany(p => p.Frameworks.Select(framework => (ChangedCount(framework))))
+                    .Any(changes => changes > 0);
+
+if (!anyChanges) return;
+
+Console.WriteLine($"## Changed Packages");
+
 foreach (var project in projects)
 {
-    Console.WriteLine($"Project '{project.Name}' has '{project.Frameworks.Count}' frameworks");
+    Console.WriteLine($"### {project.Name}");
 
     foreach (var framework in project.Frameworks)
     {
-        var diffCount = framework.PackageChanges.Added.Count + framework.PackageChanges.Removed.Count + framework.PackageChanges.Changed.Count;
-        Console.WriteLine($"- Framework '{framework.Name}' has '{diffCount}' differences");
+        var diffCount = ChangedCount(framework);
+        if (diffCount == 0) continue;
+        Console.WriteLine($"#### {framework.Name} ({diffCount} differences)");
 
         if (framework.PackageChanges.Added.Any())
         {
-            Console.WriteLine($"  Added:");
+            Console.WriteLine($"##### Added ({framework.PackageChanges.Added.Count})");
             foreach (var package in framework.PackageChanges.Added)
             {
                 var direct = package.DirectReference ? "(direct)" : "(transient)";
-                Console.WriteLine($"  - {package.Name} [{package.Version} {direct}]");
+                Console.WriteLine($"- {package.Name} [{package.Version} {direct}]");
             }
+            Console.WriteLine();
         }
 
         if (framework.PackageChanges.Removed.Any())
         {
-            Console.WriteLine($"  Removed:");
+            Console.WriteLine($"##### Removed ({framework.PackageChanges.Removed.Count})");
             foreach (var package in framework.PackageChanges.Removed)
             {
                 var direct = package.DirectReference ? "(direct)" : "(transient)";
-                Console.WriteLine($"  - {package.Name} [{package.Version} {direct}]");
+                Console.WriteLine($"- {package.Name} [{package.Version} {direct}]");
             }
         }
 
         if (framework.PackageChanges.Changed.Any())
         {
-            Console.WriteLine($"  Changed:");
+            Console.WriteLine($"##### Changed ({framework.PackageChanges.Changed.Count})");
             foreach (var packageChange in framework.PackageChanges.Changed)
             {
                 var directBefore = packageChange.DirectReferenceBefore ? "(direct)" : "(transient)";
                 var directAfter = packageChange.DirectReferenceAfter ? "(direct)" : "(transient)";
-                Console.WriteLine($"  - {packageChange.Name} [{packageChange.VersionBefore} {directBefore}] -> [{packageChange.VersionAfter} {directAfter}]");
+                Console.WriteLine($"- {packageChange.Name} [{packageChange.VersionBefore} {directBefore}] -> [{packageChange.VersionAfter} {directAfter}]");
             }
         }
     }
+}
+
+int ChangedCount(ProjectFramework projectFramework)
+{
+    return projectFramework.PackageChanges.Added.Count + projectFramework.PackageChanges.Removed.Count + projectFramework.PackageChanges.Changed.Count;
 }

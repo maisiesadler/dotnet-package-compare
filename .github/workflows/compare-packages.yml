@@ -3,13 +3,39 @@ on:
   pull_request
 
 jobs:
-  chores_api:
-    name: Run Chores API Tests
+  compare_packages:
+    name: Compare packages to main
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v1
-      - name: Run tests
+      - name: List packges before and after 
+        id: list_packages
         shell: bash
         run: |
-          git branch
           git checkout main
+          dotnet restore
+          dotnet list package --include-transitive > packages-before.txt
+
+          git checkout -
+          dotnet restore
+          dotnet list package --include-transitive > packages-after.txt
+
+      - name: Run package compare
+        id: run_package_comparison
+        run: |
+          packages=$(dotnet run --project src/PackageLister.Console ./packages-before.txt ./packages-after.txt)
+
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "DIFF_OUTPUT<<$EOF" >> $GITHUB_ENV
+          dotnet run --project src/PackageLister.Console ./packages-before.txt ./packages-after.txt >> $GITHUB_ENV
+          echo "$EOF" >> $GITHUB_ENV
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2
+        if: ${{ env.DIFF_OUTPUT }}
+        with:
+          # comment_tag: package_diffs
+          message: |
+            ${{ env.DIFF_OUTPUT }}
