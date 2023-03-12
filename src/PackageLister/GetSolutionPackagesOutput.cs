@@ -2,9 +2,9 @@ using System.Text.RegularExpressions;
 
 namespace PackageLister;
 
-public class GetSolutionPackagesOutput
+public static class GetSolutionPackagesOutput
 {
-    public SolutionListPackagesOutput Read(string[] output)
+    public static SolutionListPackagesOutput Read(string[] output)
     {
         var solutionListPackagesOutput = new SolutionListPackagesOutput();
         foreach (var (projectAndFramework, packages) in GetPackages(output))
@@ -15,6 +15,43 @@ public class GetSolutionPackagesOutput
         }
 
         return solutionListPackagesOutput;
+    }
+
+    private static IEnumerable<PackagesByProjectAndFramework> GetPackages(string[] output)
+    {
+        CurrentProject? currentProject = null;
+
+        foreach (var line in output)
+        {
+            switch (line)
+            {
+                case var l when Regex.Match(line, @"^Project '(.*)' has the following package references$") is { Success: true } match:
+                    {
+                        if (currentProject != null)
+                        {
+                            foreach (var packagesByFramework in currentProject.AllPackagesByFramework)
+                            {
+                                yield return packagesByFramework;
+                            }
+                        }
+                        currentProject = new(match.Groups[1].Value);
+                        break;
+                    }
+                default:
+                    {
+                        currentProject?.Add(line);
+                        break;
+                    }
+            }
+        }
+
+        if (currentProject != null)
+        {
+            foreach (var packagesByFramework in currentProject.AllPackagesByFramework)
+            {
+                yield return packagesByFramework;
+            }
+        }
     }
 
     private class CurrentFramework
@@ -78,43 +115,6 @@ public class GetSolutionPackagesOutput
                         _currentFramework?.Add(line);
                         break;
                     }
-            }
-        }
-    }
-
-    private IEnumerable<PackagesByProjectAndFramework> GetPackages(string[] output)
-    {
-        CurrentProject? currentProject = null;
-
-        foreach (var line in output)
-        {
-            switch (line)
-            {
-                case var l when Regex.Match(line, @"^Project '(.*)' has the following package references$") is { Success: true } match:
-                    {
-                        if (currentProject != null)
-                        {
-                            foreach (var packagesByFramework in currentProject.AllPackagesByFramework)
-                            {
-                                yield return packagesByFramework;
-                            }
-                        }
-                        currentProject = new(match.Groups[1].Value);
-                        break;
-                    }
-                default:
-                    {
-                        currentProject?.Add(line);
-                        break;
-                    }
-            }
-        }
-
-        if (currentProject != null)
-        {
-            foreach (var packagesByFramework in currentProject.AllPackagesByFramework)
-            {
-                yield return packagesByFramework;
             }
         }
     }

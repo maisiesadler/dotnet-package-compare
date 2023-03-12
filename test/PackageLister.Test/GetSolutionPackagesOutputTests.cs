@@ -10,7 +10,7 @@ public class GetSolutionPackagesOutputTests
 ".Split(Environment.NewLine);
 
         // Act
-        var solutionPackagesOutput = new GetSolutionPackagesOutput().Read(listPackagesOutput);
+        var solutionPackagesOutput = GetSolutionPackagesOutput.Read(listPackagesOutput);
 
         // Assert
         var allPackagesByProjectAndFramework = solutionPackagesOutput.GetPackagesByProjectAndFramework().ToList();
@@ -27,7 +27,7 @@ Project 'PackageLister' has the following package references
 ".Split(Environment.NewLine);
 
         // Act
-        var solutionPackagesOutput = new GetSolutionPackagesOutput().Read(listPackagesOutput);
+        var solutionPackagesOutput = GetSolutionPackagesOutput.Read(listPackagesOutput);
 
         // Assert
         var allPackagesByProjectAndFramework = solutionPackagesOutput.GetPackagesByProjectAndFramework().ToList();
@@ -52,7 +52,7 @@ Project 'PackageLister' has the following package references
 ".Split(Environment.NewLine);
 
         // Act
-        var solutionPackagesOutput = new GetSolutionPackagesOutput().Read(listPackagesOutput);
+        var solutionPackagesOutput = GetSolutionPackagesOutput.Read(listPackagesOutput);
 
         // Assert
         var allPackagesByProjectAndFramework = solutionPackagesOutput.GetPackagesByProjectAndFramework().ToList();
@@ -85,7 +85,7 @@ Project 'PackageLister.Test' has the following package references
 ".Split(Environment.NewLine);
 
         // Act
-        var solutionPackagesOutput = new GetSolutionPackagesOutput().Read(listPackagesOutput);
+        var solutionPackagesOutput = GetSolutionPackagesOutput.Read(listPackagesOutput);
 
         // Assert
         var allPackagesByProjectAndFramework = solutionPackagesOutput.GetPackagesByProjectAndFramework().ToList();
@@ -128,7 +128,7 @@ Project 'PackageLister' has the following package references
 ".Split(Environment.NewLine);
 
         // Act
-        var solutionPackagesOutput = new GetSolutionPackagesOutput().Read(listPackagesOutput);
+        var solutionPackagesOutput = GetSolutionPackagesOutput.Read(listPackagesOutput);
 
         // Assert
         var allPackagesByProjectAndFramework = solutionPackagesOutput.GetPackagesByProjectAndFramework().ToList();
@@ -164,7 +164,7 @@ Project 'PackageLister' has the following package references
 ".Split(Environment.NewLine);
 
         // Act
-        var solutionPackagesOutput = new GetSolutionPackagesOutput().Read(listPackagesOutput);
+        var solutionPackagesOutput = GetSolutionPackagesOutput.Read(listPackagesOutput);
 
         // Assert
         var allPackagesByProjectAndFramework = solutionPackagesOutput.GetPackagesByProjectAndFramework().ToList();

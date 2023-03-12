@@ -15,7 +15,7 @@ public class PackageComparisonTests
         );
 
         // Act
-        var changes = new PackageComparison().Compare(projectsBefore, projectsAfter);
+        var changes = PackageComparison.Compare(projectsBefore, projectsAfter);
 
         // Assert
         var project = Assert.Single(changes);
@@ -38,7 +38,7 @@ public class PackageComparisonTests
         );
 
         // Act
-        var changes = new PackageComparison().Compare(projectsBefore, projectsAfter);
+        var changes = PackageComparison.Compare(projectsBefore, projectsAfter);
 
         // Assert
         var project = Assert.Single(changes);
@@ -66,7 +66,7 @@ public class PackageComparisonTests
         );
 
         // Act
-        var changes = new PackageComparison().Compare(projectsBefore, projectsAfter);
+        var changes = PackageComparison.Compare(projectsBefore, projectsAfter);
 
         // Assert
         var project = Assert.Single(changes);
@@ -93,7 +93,7 @@ public class PackageComparisonTests
         );
 
         // Act
-        var changes = new PackageComparison().Compare(projectsBefore, projectsAfter);
+        var changes = PackageComparison.Compare(projectsBefore, projectsAfter);
 
         // Assert
         var project = Assert.Single(changes);
@@ -122,7 +122,7 @@ public class PackageComparisonTests
         );
 
         // Act
-        var changes = new PackageComparison().Compare(projectsBefore, projectsAfter);
+        var changes = PackageComparison.Compare(projectsBefore, projectsAfter);
 
         // Assert
         var project = Assert.Single(changes);

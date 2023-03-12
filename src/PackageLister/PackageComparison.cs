@@ -9,7 +9,7 @@ public record PackageChange(string Name, string VersionBefore, bool DirectRefere
 
 public class PackageComparison
 {
-    public IEnumerable<Project> Compare(SolutionListPackagesOutput before, SolutionListPackagesOutput after)
+    public static IEnumerable<Project> Compare(SolutionListPackagesOutput before, SolutionListPackagesOutput after)
     {
         var allProjectsAndFrameworks = new HashSet<string>();
         var projects = new Dictionary<ProjectAndFramework, PackageChanges>();
