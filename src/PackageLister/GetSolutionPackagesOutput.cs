@@ -9,6 +9,8 @@ public class GetSolutionPackagesOutput
         var solutionListPackagesOutput = new SolutionListPackagesOutput();
         foreach (var (projectAndFramework, packages) in GetPackages(output))
         {
+            solutionListPackagesOutput.Add(projectAndFramework.ProjectName, projectAndFramework.FrameworkName);
+
             foreach (var package in packages)
                 solutionListPackagesOutput.Add(projectAndFramework.ProjectName, projectAndFramework.FrameworkName, package);
         }

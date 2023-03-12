@@ -16,6 +16,13 @@ public class SolutionListPackagesOutput
         }
     }
 
+    public void Add(string projectName, string frameworkName)
+    {
+        var projectAndFramework = new ProjectAndFramework(projectName, frameworkName);
+        if (!_packagesByProjectAndFramwork.ContainsKey(projectAndFramework))
+            _packagesByProjectAndFramwork.Add(projectAndFramework, new Dictionary<string, Package>());
+    }
+
     public void Add(string projectName, string frameworkName, Package package)
     {
         var projectAndFramework = new ProjectAndFramework(projectName, frameworkName);

@@ -3,6 +3,41 @@ namespace PackageLister.Test;
 public class GetSolutionPackagesOutputTests
 {
     [Fact]
+    public void EmptyFile()
+    {
+        // Arrange
+        var listPackagesOutput = @"
+".Split(Environment.NewLine);
+
+        // Act
+        var solutionPackagesOutput = new GetSolutionPackagesOutput().Read(listPackagesOutput);
+
+        // Assert
+        var allPackagesByProjectAndFramework = solutionPackagesOutput.GetPackagesByProjectAndFramework().ToList();
+        Assert.Empty(allPackagesByProjectAndFramework);
+    }
+
+    [Fact]
+    public void OneProjectAndOneFrameworkNoPackages()
+    {
+        // Arrange
+        var listPackagesOutput = @"
+Project 'PackageLister' has the following package references
+   [net7.0]: No packages were found for this framework.
+".Split(Environment.NewLine);
+
+        // Act
+        var solutionPackagesOutput = new GetSolutionPackagesOutput().Read(listPackagesOutput);
+
+        // Assert
+        var allPackagesByProjectAndFramework = solutionPackagesOutput.GetPackagesByProjectAndFramework().ToList();
+        var (projectAndFramework, packages) = Assert.Single(allPackagesByProjectAndFramework);
+        Assert.Equal("PackageLister", projectAndFramework.ProjectName);
+        Assert.Equal("net7.0", projectAndFramework.FrameworkName);
+        Assert.Empty(packages);
+    }
+
+    [Fact]
     public void OneProjectAndOneFramework()
     {
         // Arrange
