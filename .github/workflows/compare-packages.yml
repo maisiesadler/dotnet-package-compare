@@ -10,8 +10,8 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v1
-      - name: Run Comparison
-        id: run_comparison
+      - name: List packges before and after 
+        id: list_packages
         shell: bash
         run: |
           git checkout main
@@ -22,16 +22,15 @@ jobs:
           dotnet build
           dotnet list package --include-transitive > packages-after.txt
 
-      - name: build package compare
+      - name: Run package compare
+        id: run_package_comparison
         run: |
-          ls
-          dotnet run --project src/PackageLister.Console ./packages-before.txt ./packages-after.txt 
+          packages=$(dotnet run --project src/PackageLister.Console ./packages-before.txt ./packages-after.txt)
+          echo "packages=$packages" >>$GITHUB_OUTPUT
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         # if: ${{ env.DIFF_OUTPUT }}
         with:
           message: |
-            Hello world ! :wave:
-            ${{ env.JSON_RESPONSE }}
-            ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}
+            ${{ steps.pr.outputs.packages }}
