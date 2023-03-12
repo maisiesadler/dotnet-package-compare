@@ -1,0 +1,4 @@
+Project 'PackageLister' has the following package references
+   [net7.0]: 
+   Top-level Package                               Requested   Resolved
+   > Microsoft.Extensions.DependencyInjection      7.0.0       7.0.0   
