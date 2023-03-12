@@ -34,8 +34,8 @@ jobs:
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
-        # if: ${{ env.DIFF_OUTPUT }}
+        if: ${{ env.DIFF_OUTPUT }}
         with:
-          comment_tag: package_diffs
+          # comment_tag: package_diffs
           message: |
             ${{ env.DIFF_OUTPUT }}
