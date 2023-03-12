@@ -1,13 +1,13 @@
 namespace PackageLister;
 
-public record Package(string Name, string Version, bool DirectReference);
+internal record Package(string Name, string Version, bool DirectReference);
 
-public record Project(string Name, IList<ProjectFramework> Frameworks);
-public record ProjectFramework(string Name, PackageChanges PackageChanges);
-public record PackageChanges(IList<Package> Added, IList<Package> Removed, IList<PackageChange> Changed);
-public record PackageChange(string Name, string VersionBefore, bool DirectReferenceBefore, string VersionAfter, bool DirectReferenceAfter);
+internal record Project(string Name, IList<ProjectFramework> Frameworks);
+internal record ProjectFramework(string Name, PackageChanges PackageChanges);
+internal record PackageChanges(IList<Package> Added, IList<Package> Removed, IList<PackageChange> Changed);
+internal record PackageChange(string Name, string VersionBefore, bool DirectReferenceBefore, string VersionAfter, bool DirectReferenceAfter);
 
-public class PackageComparison
+internal class PackageComparison
 {
     public static IEnumerable<Project> Compare(SolutionListPackagesOutput before, SolutionListPackagesOutput after)
     {

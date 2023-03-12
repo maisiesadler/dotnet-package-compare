@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace PackageLister;
 
-public static class GetSolutionPackagesOutput
+internal static class GetSolutionPackagesOutput
 {
     public static SolutionListPackagesOutput Read(string[] output)
     {

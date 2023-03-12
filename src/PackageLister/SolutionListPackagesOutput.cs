@@ -2,10 +2,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace PackageLister;
 
-public record ProjectAndFramework(string ProjectName, string FrameworkName);
-public record PackagesByProjectAndFramework(ProjectAndFramework ProjectAndFramework, List<Package> Packages);
+internal record ProjectAndFramework(string ProjectName, string FrameworkName);
+internal record PackagesByProjectAndFramework(ProjectAndFramework ProjectAndFramework, List<Package> Packages);
 
-public class SolutionListPackagesOutput
+internal class SolutionListPackagesOutput
 {
     private readonly Dictionary<ProjectAndFramework, Dictionary<string, Package>> _packagesByProjectAndFramwork = new();
 
