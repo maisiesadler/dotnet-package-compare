@@ -25,7 +25,7 @@ jobs:
       - name: build package compare
         run: |
           ls
-          dotnet run --project src/PackageLister.Console ./packages-before.md ./packages-after.md 
+          dotnet run --project src/PackageLister.Console ./packages-before.txt ./packages-after.txt 
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
