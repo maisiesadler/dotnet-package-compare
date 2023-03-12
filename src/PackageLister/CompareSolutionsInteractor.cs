@@ -10,6 +10,24 @@ public interface IGetProjectsAfterQuery
     public Task<SolutionListPackagesOutput> Execute();
 }
 
+public class GetProjectsFromFileQuery : IGetProjectsBeforeQuery, IGetProjectsAfterQuery
+{
+    private readonly string _file;
+
+    public GetProjectsFromFileQuery(string file)
+    {
+        _file = file;
+    }
+
+    public Task<SolutionListPackagesOutput> Execute()
+    {
+        var lines = File.ReadAllLines(_file);
+        var output = GetSolutionPackagesOutput.Read(lines);
+
+        return Task.FromResult(output);
+    }
+}
+
 public class CompareSolutionsInteractor
 {
     private readonly IGetProjectsBeforeQuery _getProjectsBeforeQuery;

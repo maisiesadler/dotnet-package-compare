@@ -26,4 +26,8 @@
     <ProjectReference Include="..\..\src\PackageLister\PackageLister.csproj" />
   </ItemGroup>
 
+ <ItemGroup>
+    <None Update="test_data/**" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
 </Project>
