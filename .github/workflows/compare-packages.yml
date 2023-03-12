@@ -15,11 +15,11 @@ jobs:
         shell: bash
         run: |
           git checkout main
-          dotnet build
+          dotnet restore
           dotnet list package --include-transitive > packages-before.txt
 
           git checkout -
-          dotnet build
+          dotnet restore
           dotnet list package --include-transitive > packages-after.txt
 
       - name: Run package compare
