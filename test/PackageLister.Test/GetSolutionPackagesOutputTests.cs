@@ -74,6 +74,49 @@ Project 'PackageLister.Test' has the following package references
     }
 
     [Fact]
+    public void OneProjectAndTwoFrameworks()
+    {
+        // Arrange
+        var listPackagesOutput = @"
+Project 'PackageLister' has the following package references
+   [net6.0]: 
+   Top-level Package                               Requested   Resolved
+
+   Transitive Package                                           Resolved
+   > Microsoft.Extensions.DependencyInjection.Abstractions      7.0.0   
+
+   [net7.0]: 
+   Top-level Package                               Requested   Resolved
+
+   Transitive Package                                           Resolved
+   > Microsoft.Extensions.DependencyInjection.Abstractions      7.0.0  
+".Split(Environment.NewLine);
+
+        // Act
+        var solutionPackagesOutput = new GetSolutionPackagesOutput().Read(listPackagesOutput);
+
+        // Assert
+        var allPackagesByProjectAndFramework = solutionPackagesOutput.GetPackagesByProjectAndFramework().ToList();
+        Assert.Equal(2, allPackagesByProjectAndFramework.Count);
+
+        var first = allPackagesByProjectAndFramework[0];
+        Assert.Equal("PackageLister", first.projectAndFramework.ProjectName);
+        Assert.Equal("net6.0", first.projectAndFramework.FrameworkName);
+        var firstPackage = Assert.Single(first.packages);
+        Assert.Equal("Microsoft.Extensions.DependencyInjection.Abstractions", firstPackage.Name);
+        Assert.Equal("7.0.0", firstPackage.Version);
+        Assert.False(firstPackage.DirectReference);
+
+        var second = allPackagesByProjectAndFramework[1];
+        Assert.Equal("PackageLister", second.projectAndFramework.ProjectName);
+        Assert.Equal("net7.0", second.projectAndFramework.FrameworkName);
+        var secondPackage = Assert.Single(second.packages);
+        Assert.Equal("Microsoft.Extensions.DependencyInjection.Abstractions", secondPackage.Name);
+        Assert.Equal("7.0.0", secondPackage.Version);
+        Assert.False(secondPackage.DirectReference);
+    }
+
+    [Fact]
     public void ResolvedFrameworkChosen()
     {
         // Arrange

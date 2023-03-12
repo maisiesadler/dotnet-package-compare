@@ -59,8 +59,8 @@ public class GetSolutionPackagesOutput
             _name = name;
         }
 
-        public ProjectAndFramework ProjectAndFramework => new ProjectAndFramework(_name, _currentFramework!.Name);
-        public List<Package> Packages => _currentFramework!.Packages;
+        public List<(ProjectAndFramework projectAndFramework, List<Package> packages)> AllPackagesByFramework
+            => _frameworks.Select(f => (new ProjectAndFramework(_name, f.Name), f.Packages)).ToList();
 
         public void Add(string line)
         {
@@ -69,6 +69,7 @@ public class GetSolutionPackagesOutput
                 case var l when Regex.Match(line, @"^\s*\[([^\[\]]+)\]:") is { Success: true } match:
                     {
                         _currentFramework = new CurrentFramework(match.Groups[1].Value);
+                        _frameworks.Add(_currentFramework);
                         break;
                     }
                 default:
@@ -92,7 +93,10 @@ public class GetSolutionPackagesOutput
                     {
                         if (currentProject != null)
                         {
-                            yield return (currentProject.ProjectAndFramework, currentProject.Packages);
+                            foreach (var frameworkPackages in currentProject.AllPackagesByFramework)
+                            {
+                                yield return frameworkPackages;
+                            }
                         }
                         currentProject = new(match.Groups[1].Value);
                         break;
@@ -107,7 +111,10 @@ public class GetSolutionPackagesOutput
 
         if (currentProject != null)
         {
-            yield return (currentProject.ProjectAndFramework, currentProject.Packages);
+            foreach (var frameworkPackages in currentProject.AllPackagesByFramework)
+            {
+                yield return frameworkPackages;
+            }
         }
     }
 }
