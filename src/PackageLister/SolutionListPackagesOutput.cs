@@ -12,24 +12,18 @@ public class SolutionListPackagesOutput
     {
         foreach (var project in initial)
         {
-            Add(project.projectName, project.frameworkName, project.package);
+            var addPackage = GetAddPackageFunction(project.projectName, project.frameworkName);
+            addPackage(project.package);
         }
     }
 
-    public void Add(string projectName, string frameworkName)
-    {
-        var projectAndFramework = new ProjectAndFramework(projectName, frameworkName);
-        if (!_packagesByProjectAndFramwork.ContainsKey(projectAndFramework))
-            _packagesByProjectAndFramwork.Add(projectAndFramework, new Dictionary<string, Package>());
-    }
-
-    public void Add(string projectName, string frameworkName, Package package)
+    public Action<Package> GetAddPackageFunction(string projectName, string frameworkName)
     {
         var projectAndFramework = new ProjectAndFramework(projectName, frameworkName);
         if (!_packagesByProjectAndFramwork.ContainsKey(projectAndFramework))
             _packagesByProjectAndFramwork.Add(projectAndFramework, new Dictionary<string, Package>());
 
-        _packagesByProjectAndFramwork[projectAndFramework].Add(package.Name, package);
+        return (package) => { _packagesByProjectAndFramwork[projectAndFramework].Add(package.Name, package); };
     }
 
     public bool TryGetPackage(ProjectAndFramework projectAndFramework, string packageName, [NotNullWhen(true)] out Package? package)
