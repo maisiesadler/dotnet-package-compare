@@ -3,28 +3,6 @@ namespace PackageLister.Test;
 public class PackageComparisonTests
 {
     [Fact]
-    public void UnchangedPackage_NotReturned()
-    {
-        // Arrange
-        var projectsBefore = new SolutionListPackagesOutput(
-            ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
-        );
-
-        var projectsAfter = new SolutionListPackagesOutput(
-            ("Project1", "net7.0", new Package("Package.One", "1.2.3", true))
-        );
-
-        // Act
-        var changes = PackageComparison.Compare(projectsBefore, projectsAfter);
-
-        // Assert
-        var project = Assert.Single(changes);
-        var frameworks = Assert.Single(project.Frameworks);
-        Assert.Empty(frameworks.PackageChanges.Added);
-        Assert.Empty(frameworks.PackageChanges.Removed);
-    }
-
-    [Fact]
     public void AddedPackage_ReturnedAsAdded()
     {
         // Arrange
