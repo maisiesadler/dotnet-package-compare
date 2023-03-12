@@ -26,8 +26,8 @@ jobs:
         id: run_package_comparison
         run: |
           packages=$(dotnet run --project src/PackageLister.Console ./packages-before.txt ./packages-after.txt)
-          echo $packages
-          # echo "packages=$packages" >>$GITHUB_OUTPUT
+
+          echo "ok"
 
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "DIFF_OUTPUT<<$EOF" >> $GITHUB_ENV
@@ -38,5 +38,6 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         # if: ${{ env.DIFF_OUTPUT }}
         with:
+          comment_tag: package_diffs
           message: |
             ${{ env.DIFF_OUTPUT }}
