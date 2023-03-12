@@ -92,17 +92,17 @@ Project 'PackageLister.Test' has the following package references
         Assert.Equal(2, allPackagesByProjectAndFramework.Count);
 
         var first = allPackagesByProjectAndFramework[0];
-        Assert.Equal("PackageLister", first.projectAndFramework.ProjectName);
-        Assert.Equal("net7.0", first.projectAndFramework.FrameworkName);
-        var firstPackage = Assert.Single(first.packages);
+        Assert.Equal("PackageLister", first.ProjectAndFramework.ProjectName);
+        Assert.Equal("net7.0", first.ProjectAndFramework.FrameworkName);
+        var firstPackage = Assert.Single(first.Packages);
         Assert.Equal("Microsoft.Extensions.DependencyInjection", firstPackage.Name);
         Assert.Equal("7.0.0", firstPackage.Version);
         Assert.True(firstPackage.DirectReference);
 
         var second = allPackagesByProjectAndFramework[1];
-        Assert.Equal("PackageLister.Test", second.projectAndFramework.ProjectName);
-        Assert.Equal("net7.0", second.projectAndFramework.FrameworkName);
-        var secondPackage = Assert.Single(second.packages);
+        Assert.Equal("PackageLister.Test", second.ProjectAndFramework.ProjectName);
+        Assert.Equal("net7.0", second.ProjectAndFramework.FrameworkName);
+        var secondPackage = Assert.Single(second.Packages);
         Assert.Equal("coverlet.collector", secondPackage.Name);
         Assert.Equal("3.1.2", secondPackage.Version);
         Assert.True(secondPackage.DirectReference);
@@ -135,17 +135,17 @@ Project 'PackageLister' has the following package references
         Assert.Equal(2, allPackagesByProjectAndFramework.Count);
 
         var first = allPackagesByProjectAndFramework[0];
-        Assert.Equal("PackageLister", first.projectAndFramework.ProjectName);
-        Assert.Equal("net6.0", first.projectAndFramework.FrameworkName);
-        var firstPackage = Assert.Single(first.packages);
+        Assert.Equal("PackageLister", first.ProjectAndFramework.ProjectName);
+        Assert.Equal("net6.0", first.ProjectAndFramework.FrameworkName);
+        var firstPackage = Assert.Single(first.Packages);
         Assert.Equal("Microsoft.Extensions.DependencyInjection.Abstractions", firstPackage.Name);
         Assert.Equal("7.0.0", firstPackage.Version);
         Assert.False(firstPackage.DirectReference);
 
         var second = allPackagesByProjectAndFramework[1];
-        Assert.Equal("PackageLister", second.projectAndFramework.ProjectName);
-        Assert.Equal("net7.0", second.projectAndFramework.FrameworkName);
-        var secondPackage = Assert.Single(second.packages);
+        Assert.Equal("PackageLister", second.ProjectAndFramework.ProjectName);
+        Assert.Equal("net7.0", second.ProjectAndFramework.FrameworkName);
+        var secondPackage = Assert.Single(second.Packages);
         Assert.Equal("Microsoft.Extensions.DependencyInjection.Abstractions", secondPackage.Name);
         Assert.Equal("7.0.0", secondPackage.Version);
         Assert.False(secondPackage.DirectReference);
@@ -170,9 +170,9 @@ Project 'PackageLister' has the following package references
         var allPackagesByProjectAndFramework = solutionPackagesOutput.GetPackagesByProjectAndFramework().ToList();
         var project = Assert.Single(allPackagesByProjectAndFramework);
 
-        Assert.Equal("PackageLister", project.projectAndFramework.ProjectName);
-        Assert.Equal("net7.0", project.projectAndFramework.FrameworkName);
-        var firstPackage = Assert.Single(project.packages);
+        Assert.Equal("PackageLister", project.ProjectAndFramework.ProjectName);
+        Assert.Equal("net7.0", project.ProjectAndFramework.FrameworkName);
+        var firstPackage = Assert.Single(project.Packages);
         Assert.Equal("Microsoft.Extensions.DependencyInjection", firstPackage.Name);
         Assert.Equal("7.0.0", firstPackage.Version);
         Assert.True(firstPackage.DirectReference);

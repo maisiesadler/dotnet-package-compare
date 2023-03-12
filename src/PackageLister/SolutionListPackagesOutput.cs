@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace PackageLister;
 
 public record ProjectAndFramework(string ProjectName, string FrameworkName);
+public record PackagesByProjectAndFramework(ProjectAndFramework ProjectAndFramework, List<Package> Packages);
 
 public class SolutionListPackagesOutput
 {
@@ -38,11 +39,11 @@ public class SolutionListPackagesOutput
         return false;
     }
 
-    public IEnumerable<(ProjectAndFramework projectAndFramework, List<Package> packages)> GetPackagesByProjectAndFramework()
+    public IEnumerable<PackagesByProjectAndFramework> GetPackagesByProjectAndFramework()
     {
         foreach (var (projectAndFramework, packageKv) in _packagesByProjectAndFramwork)
         {
-            yield return (projectAndFramework, packageKv.Values.ToList());
+            yield return new(projectAndFramework, packageKv.Values.ToList());
         }
     }
 }

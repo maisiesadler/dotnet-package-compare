@@ -60,8 +60,8 @@ public class GetSolutionPackagesOutput
             _name = name;
         }
 
-        public List<(ProjectAndFramework projectAndFramework, List<Package> packages)> AllPackagesByFramework
-            => _frameworks.Select(f => (new ProjectAndFramework(_name, f.Name), f.Packages)).ToList();
+        public List<PackagesByProjectAndFramework> AllPackagesByFramework
+            => _frameworks.Select(f => new PackagesByProjectAndFramework(new ProjectAndFramework(_name, f.Name), f.Packages)).ToList();
 
         public void Add(string line)
         {
@@ -82,7 +82,7 @@ public class GetSolutionPackagesOutput
         }
     }
 
-    private IEnumerable<(ProjectAndFramework projectAndFramework, List<Package> packages)> GetPackages(string[] output)
+    private IEnumerable<PackagesByProjectAndFramework> GetPackages(string[] output)
     {
         CurrentProject? currentProject = null;
 
@@ -94,9 +94,9 @@ public class GetSolutionPackagesOutput
                     {
                         if (currentProject != null)
                         {
-                            foreach (var frameworkPackages in currentProject.AllPackagesByFramework)
+                            foreach (var packagesByFramework in currentProject.AllPackagesByFramework)
                             {
-                                yield return frameworkPackages;
+                                yield return packagesByFramework;
                             }
                         }
                         currentProject = new(match.Groups[1].Value);
@@ -112,9 +112,9 @@ public class GetSolutionPackagesOutput
 
         if (currentProject != null)
         {
-            foreach (var frameworkPackages in currentProject.AllPackagesByFramework)
+            foreach (var packagesByFramework in currentProject.AllPackagesByFramework)
             {
-                yield return frameworkPackages;
+                yield return packagesByFramework;
             }
         }
     }
