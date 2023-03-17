@@ -3,7 +3,7 @@ on:
   pull_request
 
 jobs:
-  compare_packages:
+  action_compare_packages:
     name: Compare packages to main (GH action)
     runs-on: ubuntu-latest
     permissions:
