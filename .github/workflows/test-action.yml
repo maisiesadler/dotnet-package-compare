@@ -35,5 +35,4 @@ jobs:
         with:
           # comment_tag: package_diffs
           message: |
-            From action:
             ${{ env.DIFF_OUTPUT }}
