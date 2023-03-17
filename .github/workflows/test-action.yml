@@ -22,12 +22,12 @@ jobs:
           dotnet restore
           dotnet list package --include-transitive > packages-after.txt
 
-    - name: Run package comparison
-      id: run_package_comparison
-      uses: maisiesadler/dotnet-package-compare@v0.0.1-pre01
-      env:
-        BEFORE_FILE_LOCATION: './packages-before.txt'
-        AFTER_FILE_LOCATION: './packages-after.txt'
+      - name: Run package comparison
+        id: run_package_comparison
+        uses: maisiesadler/dotnet-package-compare@v0.0.1-pre03
+        env:
+          BEFORE_FILE_LOCATION: './packages-before.txt'
+          AFTER_FILE_LOCATION: './packages-after.txt'
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
