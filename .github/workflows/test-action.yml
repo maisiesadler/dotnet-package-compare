@@ -24,7 +24,7 @@ jobs:
 
       - name: Run package comparison
         id: run_package_comparison
-        uses: maisiesadler/dotnet-package-compare@v0.0.1-pre01
+        uses: maisiesadler/dotnet-package-compare@v0.0.1-pre02
         env:
           BEFORE_FILE_LOCATION: './packages-before.txt'
           AFTER_FILE_LOCATION: './packages-after.txt'
