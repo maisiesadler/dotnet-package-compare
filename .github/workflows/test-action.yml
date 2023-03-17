@@ -3,7 +3,7 @@ on:
   pull_request
 
 jobs:
-  action-compare-packages:
+  compare_packages:
     name: Compare packages to main using GH action
     runs-on: ubuntu-latest
     permissions:
@@ -21,18 +21,3 @@ jobs:
           git checkout -
           dotnet restore
           dotnet list package --include-transitive > packages-after.txt
-
-    - name: Run package comparison
-      id: run_package_comparison
-      uses: maisiesadler/dotnet-package-compare@v0.0.1-pre01
-      env:
-        BEFORE_FILE_LOCATION: './packages-before.txt'
-        AFTER_FILE_LOCATION: './packages-after.txt'
-
-      - name: Comment PR
-        uses: thollander/actions-comment-pull-request@v2
-        if: ${{ env.DIFF_OUTPUT }}
-        with:
-          # comment_tag: package_diffs
-          message: |
-            ${{ env.DIFF_OUTPUT }}
