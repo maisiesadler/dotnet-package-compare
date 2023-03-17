@@ -1,0 +1,11 @@
+name: 'Dotnet package comparison'
+description: 'Shows packages changes for a PR'
+branding:
+  icon: bar-chart-2
+  color: gray-dark
+outputs:
+  result:
+    description: 'Package comparison text'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
