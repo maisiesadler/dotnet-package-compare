@@ -11,8 +11,9 @@ if [ $r -ne 0 ]; then
     exit $r
 fi
 
-result="${result//'%'/'%25'}"
-result="${result//$'\n'/'%0A'}"
-result="${result//$'\r'/'%0D'}"
-
 echo $result
+
+EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+    echo "DIFF_OUTPUT<<$EOF" >> $GITHUB_ENV
+    echo $result >> $GITHUB_ENV
+    echo "$EOF" >> $GITHUB_ENV
